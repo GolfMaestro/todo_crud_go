@@ -59,7 +59,7 @@ func InsertNewPersonInDB(name string, lastName string) models.Person {
 		"INSERT INTO persons (name, lastName) VALUES ($1, $2) RETURNING id", name, lastName).Scan(&userID)
 
 	if err != nil {
-		fmt.Println("Something went wrong")
+		fmt.Println("Something went wrong in funciton InsertNewPersonInDB")
 	}
 
 	tempPerson := models.Person{
@@ -70,4 +70,15 @@ func InsertNewPersonInDB(name string, lastName string) models.Person {
 
 	return tempPerson
 
+}
+
+func DeleteUserByIDFromDB(req_id int) int {
+	var userID int
+	err := Pool.QueryRow(context.Background(),
+		"DELETE FROM persons WHERE id = $1 RETURNING id", req_id).Scan(&userID)
+	if err != nil {
+		fmt.Println("Something went wrong in funciton DeleteUserByIDFromDB")
+	}
+
+	return userID
 }
