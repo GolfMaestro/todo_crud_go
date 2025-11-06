@@ -36,14 +36,6 @@ func GetPersonById(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Something went wrong")
 	}
 
-	// ind := 0
-
-	// for i := 0; i < len(models.Persons); i++ {
-	// 	if models.Persons[i].ID == requested_id {
-	// 		ind = i
-	// 	}
-	// }
-
 	w.Header().Set("Content-Type", "application/json")
 
 	json.NewEncoder(w).Encode(storage.GetUserByIdFromDB(requested_id))

@@ -25,3 +25,29 @@ func GetUserByIdFromDB(req_id int) models.Person {
 	return tempPerson
 
 }
+
+func GetUsersFromDB() []models.Person {
+
+	rows, err := Pool.Query(context.Background(),
+		"SELECT id, name, lastName FROM persons")
+
+	if err != nil {
+		fmt.Println("Something went wrong")
+	}
+
+	defer rows.Close()
+
+	var persons []models.Person
+
+	for rows.Next() {
+		var t models.Person
+		temp_err := rows.Scan(&t.ID, t.Name, t.LastName)
+		if temp_err != nil {
+			fmt.Println("Something went wrong")
+		}
+		persons = append(persons, t)
+	}
+
+	return persons
+
+}
