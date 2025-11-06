@@ -2,6 +2,7 @@ package service
 
 import (
 	"crud_go/models"
+	"crud_go/storage"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -35,17 +36,17 @@ func GetPersonById(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Something went wrong")
 	}
 
-	ind := 0
+	// ind := 0
 
-	for i := 0; i < len(models.Persons); i++ {
-		if models.Persons[i].ID == requested_id {
-			ind = i
-		}
-	}
+	// for i := 0; i < len(models.Persons); i++ {
+	// 	if models.Persons[i].ID == requested_id {
+	// 		ind = i
+	// 	}
+	// }
 
 	w.Header().Set("Content-Type", "application/json")
 
-	json.NewEncoder(w).Encode(models.Persons[ind])
+	json.NewEncoder(w).Encode(storage.GetUserByIdFromDB(requested_id))
 }
 
 func CreatePerson(w http.ResponseWriter, r *http.Request) {
