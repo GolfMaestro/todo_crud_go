@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"crud_go/storage"
 	"fmt"
 	"net/http"
@@ -13,17 +12,11 @@ func main() {
 
 	storage.InitDBConnetion()
 
-	var id, name, lastName string
-	err := storage.Pool.QueryRow(context.Background(),
-		"SELECT id, name, lastName FROM persons WHERE id = $1", 1,
-	).Scan(&id, &name, &lastName)
-	if err != nil {
-		fmt.Println("Sonmething went wrong")
-	}
+	tempPerson := storage.GetUserByIdFromDB(1)
 
-	fmt.Println(id)
-	fmt.Println(name)
-	fmt.Println(lastName)
+	fmt.Println(tempPerson.ID)
+	fmt.Println(tempPerson.Name)
+	fmt.Println(tempPerson.LastName)
 
 	CrudGoController()
 
