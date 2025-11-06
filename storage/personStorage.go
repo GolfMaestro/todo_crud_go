@@ -73,12 +73,11 @@ func InsertNewPersonInDB(name string, lastName string) models.Person {
 }
 
 func DeleteUserByIDFromDB(req_id int) int {
-	var userID int
-	err := Pool.QueryRow(context.Background(),
-		"DELETE FROM persons WHERE id = $1 RETURNING id", req_id).Scan(&userID)
+	_, err := Pool.Exec(context.Background(),
+		"DELETE FROM persons WHERE id = $1", req_id)
 	if err != nil {
 		fmt.Println("Something went wrong in funciton DeleteUserByIDFromDB")
 	}
 
-	return userID
+	return req_id
 }
