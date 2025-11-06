@@ -81,3 +81,14 @@ func DeleteUserByIDFromDB(req_id int) int {
 
 	return req_id
 }
+
+func UpdatePersonNameById(req_id int, new_name string) int {
+
+	_, err := Pool.Exec(context.Background(),
+		"UPDATE persons SET name = $1 WHERE id = $2", new_name, req_id)
+	if err != nil {
+		fmt.Println("Something went wrong in funciton UpdatePersonNameById")
+	}
+
+	return req_id
+}

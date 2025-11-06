@@ -80,42 +80,32 @@ func DeletePersonById(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// func UpdatePersonNameById(w http.ResponseWriter, r *http.Request) {
+func UpdatePersonNameById(w http.ResponseWriter, r *http.Request) {
 
-// 	if r.Method != http.MethodPut {
-// 		http.Error(w, "Method is not allowed", http.StatusMethodNotAllowed)
-// 		return
-// 	}
+	if r.Method != http.MethodPut {
+		http.Error(w, "Method is not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 
-// 	path := r.URL.Path
-// 	parts := strings.Split(path, "/")
+	path := r.URL.Path
+	parts := strings.Split(path, "/")
 
-// 	requested_id, err := strconv.Atoi(parts[2])
-// 	if err != nil {
-// 		fmt.Println("Something went wrong")
-// 	}
+	requested_id, err := strconv.Atoi(parts[2])
+	if err != nil {
+		fmt.Println("Something went wrong")
+	}
 
-// 	ind := 0
+	var updates struct {
+		Name     *string `json:"name,omitempty"`
+		LastName *string `json:"lastName,omitempty"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&updates); err != nil {
+		http.Error(w, "Неверный JSON", http.StatusBadRequest)
+		return
+	}
 
-// 	for i := 0; i < len(models.Persons); i++ {
-// 		if models.Persons[i].ID == requested_id {
-// 			ind = i
-// 		}
-// 	}
+	w.Header().Set("Content-Type", "application/json")
 
-// 	var updates struct {
-// 		Name     *string `json:"name,omitempty"`
-// 		LastName *string `json:"lastName,omitempty"`
-// 	}
-// 	if err := json.NewDecoder(r.Body).Decode(&updates); err != nil {
-// 		http.Error(w, "Неверный JSON", http.StatusBadRequest)
-// 		return
-// 	}
+	json.NewEncoder(w).Encode(storage.UpdatePersonNameById(requested_id, *updates.Name))
 
-// 	models.Persons[ind].Name = *updates.Name
-
-// 	w.Header().Set("Content-Type", "application/json")
-
-// 	json.NewEncoder(w).Encode(models.Persons[ind])
-
-// }
+}
