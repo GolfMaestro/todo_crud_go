@@ -41,7 +41,7 @@ func GetUsersFromDB() []models.Person {
 
 	for rows.Next() {
 		var t models.Person
-		temp_err := rows.Scan(&t.ID, t.Name, t.LastName)
+		temp_err := rows.Scan(&t.ID, &t.Name, &t.LastName)
 		if temp_err != nil {
 			fmt.Println("Something went wrong")
 		}

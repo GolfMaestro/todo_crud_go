@@ -12,11 +12,11 @@ func main() {
 
 	storage.InitDBConnetion()
 
-	tempPerson := storage.GetUserByIdFromDB(1)
+	// tempPerson := storage.GetUserByIdFromDB(1)
 
-	fmt.Println(tempPerson.ID)
-	fmt.Println(tempPerson.Name)
-	fmt.Println(tempPerson.LastName)
+	// fmt.Println(tempPerson.ID)
+	// fmt.Println(tempPerson.Name)
+	// fmt.Println(tempPerson.LastName)
 
 	CrudGoController()
 
