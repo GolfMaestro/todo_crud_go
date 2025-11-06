@@ -29,8 +29,10 @@ func main() {
 
 		if r.Method == http.MethodGet {
 			getPersonById(w, r)
-		} else {
+		} else if r.Method == http.MethodDelete {
 			deletePersonById(w, r)
+		} else {
+			updatePersonNameById(w, r)
 		}
 	})
 
@@ -146,4 +148,44 @@ func deletePersonById(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(persons[ind])
 
 	persons = append(persons[:ind], persons[ind+1:]...)
+}
+
+func updatePersonNameById(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodPut {
+		http.Error(w, "Method is not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	path := r.URL.Path
+	parts := strings.Split(path, "/")
+
+	requested_id, err := strconv.Atoi(parts[2])
+	if err != nil {
+		fmt.Println("Something went wrong")
+	}
+
+	ind := 0
+
+	for i := 0; i < len(persons); i++ {
+		if persons[i].ID == requested_id {
+			ind = i
+		}
+	}
+
+	var updates struct {
+		Name     *string `json:"name,omitempty"`
+		LastName *string `json:"lastName,omitempty"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&updates); err != nil {
+		http.Error(w, "Неверный JSON", http.StatusBadRequest)
+		return
+	}
+
+	persons[ind].Name = *updates.Name
+
+	w.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(w).Encode(persons[ind])
+
 }
