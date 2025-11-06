@@ -13,7 +13,7 @@ func GetUserByIdFromDB(req_id int) models.Person {
 		"SELECT id, name, lastName FROM persons WHERE id = $1", req_id,
 	).Scan(&id, &name, &lastName)
 	if err != nil {
-		fmt.Println("Sonmething went wrong")
+		fmt.Println("Sonmething went wrong in fuction GetUserByIdFromDB")
 	}
 
 	tempPerson := models.Person{
@@ -32,7 +32,7 @@ func GetUsersFromDB() []models.Person {
 		"SELECT id, name, lastName FROM persons")
 
 	if err != nil {
-		fmt.Println("Something went wrong")
+		fmt.Println("Something went wrong in function GetUsersFromDB")
 	}
 
 	defer rows.Close()
@@ -49,5 +49,25 @@ func GetUsersFromDB() []models.Person {
 	}
 
 	return persons
+
+}
+
+func InsertNewPersonInDB(name string, lastName string) models.Person {
+
+	var userID int
+	err := Pool.QueryRow(context.Background(),
+		"INSERT INTO persons (name, lastName) VALUES ($1, $2) RETURNING id", name, lastName).Scan(&userID)
+
+	if err != nil {
+		fmt.Println("Something went wrong")
+	}
+
+	tempPerson := models.Person{
+		ID:       userID,
+		Name:     name,
+		LastName: lastName,
+	}
+
+	return tempPerson
 
 }

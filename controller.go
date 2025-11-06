@@ -13,11 +13,13 @@ func CrudGoController() {
 
 		if r.Method == http.MethodGet {
 			service.GetPersonById(w, r)
-		} else if r.Method == http.MethodDelete {
-			service.DeletePersonById(w, r)
-		} else {
-			service.UpdatePersonNameById(w, r)
 		}
+
+		// } else if r.Method == http.MethodDelete {
+		// 	service.DeletePersonById(w, r)
+		// } else {
+		// 	service.UpdatePersonNameById(w, r)
+		// }
 	})
 
 	http.HandleFunc("/persons", func(w http.ResponseWriter, r *http.Request) {
