@@ -16,6 +16,7 @@ func GetTasksByPersonId(w http.ResponseWriter, r *http.Request) {
 	requested_id := getRequestedId(r)
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(storage.GetTasksByPersonIdFromDB(requested_id))
 
 }
@@ -33,7 +34,8 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json") // maybe just pass person
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(storage.InsertNewTaskInDB(newTask))
 }
 
@@ -46,7 +48,7 @@ func UpdateTaskStatus(w http.ResponseWriter, r *http.Request) {
 	requested_id := getRequestedId(r)
 
 	w.Header().Set("Content-Type", "application/json")
-
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(storage.UpdateTaskStatusDB(requested_id))
 
 }
@@ -60,7 +62,7 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	requested_id := getRequestedId(r)
 
 	w.Header().Set("Content-Type", "application/json")
-
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(storage.DeleteTaskFromDB(requested_id))
 
 }

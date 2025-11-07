@@ -15,6 +15,7 @@ func GetPersons(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(storage.GetUsersFromDB())
 }
 
@@ -28,7 +29,7 @@ func GetPersonById(w http.ResponseWriter, r *http.Request) {
 	requested_id := getRequestedId(r)
 
 	w.Header().Set("Content-Type", "application/json")
-
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(storage.GetUserByIdFromDB(requested_id))
 }
 
@@ -47,6 +48,7 @@ func CreatePerson(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(storage.InsertNewPersonInDB(newPerson))
 }
 
@@ -60,7 +62,7 @@ func DeletePersonById(w http.ResponseWriter, r *http.Request) {
 	requested_id := getRequestedId(r)
 
 	w.Header().Set("Content-Type", "application/json")
-
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(storage.DeleteUserByIDFromDB(requested_id))
 
 }
@@ -84,7 +86,7 @@ func UpdatePersonNameById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(storage.UpdatePersonNameById(requested_id, *updates.Name))
 
 }
