@@ -4,10 +4,7 @@ import (
 	"crud_go/models"
 	"crud_go/storage"
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"strconv"
-	"strings"
 )
 
 func GetTasksByPersonId(w http.ResponseWriter, r *http.Request) {
@@ -16,13 +13,7 @@ func GetTasksByPersonId(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	path := r.URL.Path
-	parts := strings.Split(path, "/")
-
-	requested_id, err := strconv.Atoi(parts[2])
-	if err != nil {
-		fmt.Println("Something went wrong")
-	}
+	requested_id := getRequestedId(r)
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(storage.GetTasksByPersonIdFromDB(requested_id))
@@ -52,13 +43,7 @@ func UpdateTaskStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	path := r.URL.Path
-	parts := strings.Split(path, "/")
-
-	requested_id, err := strconv.Atoi(parts[2])
-	if err != nil {
-		fmt.Println("Something went wrong")
-	}
+	requested_id := getRequestedId(r)
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -72,13 +57,7 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	path := r.URL.Path
-	parts := strings.Split(path, "/")
-
-	requested_id, err := strconv.Atoi(parts[2])
-	if err != nil {
-		fmt.Println("Something went wrong")
-	}
+	requested_id := getRequestedId(r)
 
 	w.Header().Set("Content-Type", "application/json")
 

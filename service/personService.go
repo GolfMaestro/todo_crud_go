@@ -4,10 +4,7 @@ import (
 	"crud_go/models"
 	"crud_go/storage"
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"strconv"
-	"strings"
 )
 
 func GetPersons(w http.ResponseWriter, r *http.Request) {
@@ -28,13 +25,7 @@ func GetPersonById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	path := r.URL.Path
-	parts := strings.Split(path, "/")
-
-	requested_id, err := strconv.Atoi(parts[2])
-	if err != nil {
-		fmt.Println("Something went wrong")
-	}
+	requested_id := getRequestedId(r)
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -66,13 +57,7 @@ func DeletePersonById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	path := r.URL.Path
-	parts := strings.Split(path, "/")
-
-	requested_id, err := strconv.Atoi(parts[2])
-	if err != nil {
-		fmt.Println("Something went wrong")
-	}
+	requested_id := getRequestedId(r)
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -87,13 +72,7 @@ func UpdatePersonNameById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	path := r.URL.Path
-	parts := strings.Split(path, "/")
-
-	requested_id, err := strconv.Atoi(parts[2])
-	if err != nil {
-		fmt.Println("Something went wrong")
-	}
+	requested_id := getRequestedId(r)
 
 	var updates struct {
 		Name     *string `json:"name,omitempty"`
