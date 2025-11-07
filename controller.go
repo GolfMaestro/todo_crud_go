@@ -28,6 +28,20 @@ func CrudGoController() {
 			service.GetPersons(w, r)
 		}
 	})
+
+	http.HandleFunc("/tasks", func(w http.ResponseWriter, r *http.Request) {
+
+		if r.Method == http.MethodPost {
+			service.CreateTask(w, r)
+		}
+	})
+
+	http.HandleFunc("/tasks/", func(w http.ResponseWriter, r *http.Request) {
+
+		if r.Method == http.MethodGet {
+			service.GetTasksByPersonId(w, r)
+		}
+	})
 }
 
 func hello_handler(w http.ResponseWriter, r *http.Request) {
