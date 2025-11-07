@@ -47,6 +47,34 @@ func TestReadPersons(t *testing.T) {
 
 }
 
+func TestReadPersonById(t *testing.T) {
+
+	TestConnection(t)
+
+	storage.Pool.Exec(context.Background(), "TRUNCATE TABLE persons CASCADE")
+	storage.Pool.Exec(context.Background(), "INSERT INTO persons (id, name, lastName) VALUES (1, 'Mike', 'Black')")
+
+	req := httptest.NewRequest(http.MethodGet, "/persons/1", nil)
+	w := httptest.NewRecorder()
+
+	service.GetPersonById(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("waiting 200, get:  %d", w.Code)
+	}
+
+	var person models.Person
+
+	if err := json.NewDecoder(w.Body).Decode(&person); err != nil {
+		t.Fatal("Problem with decode json:", err)
+	}
+
+	if person.Name != "Mike" {
+		t.Fatalf("Mike dont exists in DB")
+	}
+
+}
+
 func TestCreatePerson(t *testing.T) {
 
 	TestConnection(t)
