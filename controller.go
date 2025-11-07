@@ -40,6 +40,8 @@ func CrudGoController() {
 
 		if r.Method == http.MethodGet {
 			service.GetTasksByPersonId(w, r)
+		} else if r.Method == http.MethodPut {
+			service.UpdateTaskStatus(w, r)
 		}
 	})
 }

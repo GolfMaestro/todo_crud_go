@@ -54,3 +54,15 @@ func InsertNewTaskInDB(newTask models.Task) models.Task {
 	return temp_task
 
 }
+
+func UpdateTaskStatusDB(req_id int) int {
+
+	_, err := Pool.Exec(context.Background(),
+		"UPDATE tasks SET is_complete = true WHERE id = $1", req_id)
+	if err != nil {
+		fmt.Println("Something went wrong in funciton UpdateTaskStatusDB")
+	}
+
+	return req_id
+
+}
