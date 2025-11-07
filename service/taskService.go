@@ -65,3 +65,23 @@ func UpdateTaskStatus(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(storage.UpdateTaskStatusDB(requested_id))
 
 }
+
+func DeleteTask(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		http.Error(w, "Method is not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	path := r.URL.Path
+	parts := strings.Split(path, "/")
+
+	requested_id, err := strconv.Atoi(parts[2])
+	if err != nil {
+		fmt.Println("Something went wrong")
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	json.NewEncoder(w).Encode(storage.DeleteTaskFromDB(requested_id))
+
+}

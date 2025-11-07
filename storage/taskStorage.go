@@ -66,3 +66,15 @@ func UpdateTaskStatusDB(req_id int) int {
 	return req_id
 
 }
+func DeleteTaskFromDB(req_id int) int {
+
+	_, err := Pool.Exec(context.Background(),
+		"DELETE FROM tasks WHERE id = $1", req_id)
+
+	if err != nil {
+		fmt.Println("Something went wrong in funciton DeleteTaskFromDB")
+	}
+
+	return req_id
+
+}

@@ -42,6 +42,8 @@ func CrudGoController() {
 			service.GetTasksByPersonId(w, r)
 		} else if r.Method == http.MethodPut {
 			service.UpdateTaskStatus(w, r)
+		} else if r.Method == http.MethodDelete {
+			service.DeleteTask(w, r)
 		}
 	})
 }
