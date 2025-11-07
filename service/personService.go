@@ -80,7 +80,7 @@ func UpdatePersonNameById(w http.ResponseWriter, r *http.Request) {
 		Name *string `json:"name"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&updates); err != nil {
-		http.Error(w, "Неверный JSON", http.StatusBadRequest)
+		http.Error(w, "Wrong JSON", http.StatusBadRequest)
 		return
 	}
 
