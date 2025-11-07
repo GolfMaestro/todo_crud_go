@@ -137,3 +137,27 @@ func TestUpdatePerson(t *testing.T) {
 	}
 
 }
+
+func TestDeletePerson(t *testing.T) {
+
+	TestConnection(t)
+
+	storage.Pool.Exec(context.Background(), "TRUNCATE TABLE persons CASCADE")
+	storage.Pool.Exec(context.Background(), "INSERT INTO persons (id, name, lastName) VALUES (1, 'Mike', 'Black')")
+
+	req := httptest.NewRequest(http.MethodDelete, "/persons/1", nil)
+	w := httptest.NewRecorder()
+
+	service.DeletePersonById(w, req)
+
+	if w.Code != http.StatusNoContent {
+		t.Fatalf("waiting 204, get:  %d", w.Code)
+	}
+
+	var count int
+	storage.Pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM persons WHERE name = $1", "Mike").Scan(&count)
+	if count != 0 {
+		t.Fatal("Person still in db")
+	}
+
+}
