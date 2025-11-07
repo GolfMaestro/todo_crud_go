@@ -10,25 +10,11 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func TestReadPersons(t *testing.T) {
 
-	ctx := context.Background()
-
-	config, err := pgxpool.ParseConfig("postgres://postgres:2004@localhost:5432/test_crud_go")
-	if err != nil {
-		t.Fatal(err)
-	}
-	config.MaxConns = 5
-	config.MinConns = 1
-
-	storage.Pool, err = pgxpool.NewWithConfig(ctx, config)
-	if err != nil {
-		t.Fatal(err)
-	}
+	TestConnection(t)
 
 	storage.Pool.Exec(context.Background(), "TRUNCATE TABLE persons CASCADE")
 	storage.Pool.Exec(context.Background(), "INSERT INTO persons (name, lastName) VALUES ('Mike', 'Black')")
@@ -63,19 +49,7 @@ func TestReadPersons(t *testing.T) {
 
 func TestCreatePerson(t *testing.T) {
 
-	ctx := context.Background()
-
-	config, err := pgxpool.ParseConfig("postgres://postgres:2004@localhost:5432/test_crud_go")
-	if err != nil {
-		t.Fatal(err)
-	}
-	config.MaxConns = 5
-	config.MinConns = 1
-
-	storage.Pool, err = pgxpool.NewWithConfig(ctx, config)
-	if err != nil {
-		t.Fatal(err)
-	}
+	TestConnection(t)
 
 	storage.Pool.Exec(context.Background(), "TRUNCATE TABLE persons CASCADE")
 
@@ -100,7 +74,7 @@ func TestCreatePerson(t *testing.T) {
 	}
 
 	var count int
-	storage.Pool.QueryRow(ctx, "SELECT COUNT(*) FROM persons WHERE name = $1", "Mike").Scan(&count)
+	storage.Pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM persons WHERE name = $1", "Mike").Scan(&count)
 	if count != 1 {
 		t.Fatal("Person not saved in db")
 	}
