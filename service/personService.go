@@ -77,8 +77,7 @@ func UpdatePersonNameById(w http.ResponseWriter, r *http.Request) {
 	requested_id := getRequestedId(r)
 
 	var updates struct {
-		Name     *string `json:"name,omitempty"`
-		LastName *string `json:"lastName,omitempty"`
+		Name *string `json:"name"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&updates); err != nil {
 		http.Error(w, "Неверный JSON", http.StatusBadRequest)
