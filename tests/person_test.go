@@ -108,3 +108,32 @@ func TestCreatePerson(t *testing.T) {
 	}
 
 }
+
+func TestUpdatePerson(t *testing.T) {
+
+	TestConnection(t)
+
+	storage.Pool.Exec(context.Background(), "TRUNCATE TABLE persons CASCADE")
+	storage.Pool.Exec(context.Background(), "INSERT INTO persons (id, name, lastName) VALUES (1, 'Mike', 'Black')")
+
+	values := strings.NewReader("{\"name\": \"Sandy\"}")
+	req := httptest.NewRequest(http.MethodPut, "/persons/1", values)
+	w := httptest.NewRecorder()
+
+	service.UpdatePersonNameById(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("waiting 200, get:  %d", w.Code)
+	}
+
+	var id int
+	var name, lastName string
+	storage.Pool.QueryRow(context.Background(),
+		"SELECT id, name, lastName FROM persons WHERE id = $1", 1,
+	).Scan(&id, &name, &lastName)
+
+	if name != "Sandy" {
+		t.Fatal("Person not updated")
+	}
+
+}
