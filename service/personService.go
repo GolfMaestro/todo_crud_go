@@ -46,8 +46,8 @@ func CreatePerson(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json") // maybe just pass person
-	json.NewEncoder(w).Encode(storage.InsertNewPersonInDB(newPerson.Name, newPerson.LastName))
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(storage.InsertNewPersonInDB(newPerson))
 }
 
 func DeletePersonById(w http.ResponseWriter, r *http.Request) {

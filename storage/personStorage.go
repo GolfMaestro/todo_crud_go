@@ -8,7 +8,8 @@ import (
 
 func GetUserByIdFromDB(req_id int) models.Person {
 
-	var id, name, lastName string
+	var id int
+	var name, lastName string
 	err := Pool.QueryRow(context.Background(),
 		"SELECT id, name, lastName FROM persons WHERE id = $1", req_id,
 	).Scan(&id, &name, &lastName)
@@ -17,7 +18,7 @@ func GetUserByIdFromDB(req_id int) models.Person {
 	}
 
 	tempPerson := models.Person{
-		ID:       req_id, // Лучше переконвертировать id в инт я думаю
+		ID:       id,
 		Name:     name,
 		LastName: lastName,
 	}
@@ -52,11 +53,11 @@ func GetUsersFromDB() []models.Person {
 
 }
 
-func InsertNewPersonInDB(name string, lastName string) models.Person {
+func InsertNewPersonInDB(newPerson models.Person) models.Person {
 
 	var userID int
 	err := Pool.QueryRow(context.Background(),
-		"INSERT INTO persons (name, lastName) VALUES ($1, $2) RETURNING id", name, lastName).Scan(&userID)
+		"INSERT INTO persons (name, lastName) VALUES ($1, $2) RETURNING id", newPerson.Name, newPerson.LastName).Scan(&userID)
 
 	if err != nil {
 		fmt.Println("Something went wrong in funciton InsertNewPersonInDB")
@@ -64,8 +65,8 @@ func InsertNewPersonInDB(name string, lastName string) models.Person {
 
 	tempPerson := models.Person{
 		ID:       userID,
-		Name:     name,
-		LastName: lastName,
+		Name:     newPerson.Name,
+		LastName: newPerson.LastName,
 	}
 
 	return tempPerson
