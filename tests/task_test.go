@@ -113,3 +113,29 @@ func TestUpdateTask(t *testing.T) {
 	}
 
 }
+
+func TestDeleteTask(t *testing.T) {
+
+	TestConnection(t)
+
+	storage.Pool.Exec(context.Background(), "TRUNCATE TABLE tasks CASCADE")
+	storage.Pool.Exec(context.Background(), "TRUNCATE TABLE tasks CASCADE")
+	storage.Pool.Exec(context.Background(), "INSERT INTO persons (id, name, lastName) VALUES (1, 'Mike', 'Black')")
+	storage.Pool.Exec(context.Background(), "INSERT INTO tasks (id, person_id, title) VALUES (1, 1, 'Learn Go')")
+
+	req := httptest.NewRequest(http.MethodDelete, "/tasks/1", nil)
+	w := httptest.NewRecorder()
+
+	service.DeleteTask(w, req)
+
+	if w.Code != http.StatusNoContent {
+		t.Fatalf("waiting 204, get:  %d", w.Code)
+	}
+
+	var count int
+	storage.Pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM tasks WHERE person_id = $1", 1).Scan(&count)
+	if count != 0 {
+		t.Fatal("Task still in db")
+	}
+
+}
