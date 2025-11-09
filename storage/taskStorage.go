@@ -10,7 +10,7 @@ import (
 func GetTasksByPersonIdFromDB(req_person_id int) []models.Task {
 
 	rows, err := Pool.Query(context.Background(),
-		"SELECT id, person_id, title, is_completed, created_at FROM tasks WHERE person_id = $1",
+		"SELECT id, person_id, title, is_complete, created_at FROM tasks WHERE person_id = $1",
 		req_person_id)
 
 	if err != nil {
