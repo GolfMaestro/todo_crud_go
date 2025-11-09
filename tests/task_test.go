@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -44,6 +45,42 @@ func TestReadTasks(t *testing.T) {
 
 	if !isExist {
 		t.Fatalf("Task \"Learn Go\" not in DB")
+	}
+
+}
+
+func TestCreateTask(t *testing.T) {
+
+	TestConnection(t)
+
+	storage.Pool.Exec(context.Background(), "TRUNCATE TABLE tasks CASCADE")
+	storage.Pool.Exec(context.Background(), "TRUNCATE TABLE tasks CASCADE")
+	storage.Pool.Exec(context.Background(), "INSERT INTO persons (id, name, lastName) VALUES (1, 'Mike', 'Black')")
+
+	values := strings.NewReader("{\"personId\": 1, \"title\": \"Learn GO\"}")
+	req := httptest.NewRequest(http.MethodPost, "/tasks", values)
+	req.Header.Set("Content-Type", "application/json")
+
+	w := httptest.NewRecorder()
+	service.CreateTask(w, req)
+
+	if w.Code != http.StatusCreated {
+		t.Fatalf("waiting 201, get:  %d", w.Code)
+	}
+
+	var task models.Task
+	if err := json.NewDecoder(w.Body).Decode(&task); err != nil {
+		t.Fatalf("wrong JSON: %s", err)
+	}
+
+	if task.Title != "Learn GO" {
+		t.Fatalf("Waiting Learn Go, get: %s", task.Title)
+	}
+
+	var count int
+	storage.Pool.QueryRow(context.Background(), "SELECT COUNT(*) FROM tasks WHERE person_id = $1", "1").Scan(&count)
+	if count != 1 {
+		t.Fatal("Task not saved in db")
 	}
 
 }
