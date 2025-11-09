@@ -84,3 +84,32 @@ func TestCreateTask(t *testing.T) {
 	}
 
 }
+
+func TestUpdateTask(t *testing.T) {
+
+	TestConnection(t)
+
+	storage.Pool.Exec(context.Background(), "TRUNCATE TABLE tasks CASCADE")
+	storage.Pool.Exec(context.Background(), "TRUNCATE TABLE tasks CASCADE")
+	storage.Pool.Exec(context.Background(), "INSERT INTO persons (id, name, lastName) VALUES (1, 'Mike', 'Black')")
+	storage.Pool.Exec(context.Background(), "INSERT INTO tasks (id, person_id, title) VALUES (1, 1, 'Learn Go')")
+
+	req := httptest.NewRequest(http.MethodPut, "/tasks/1", nil)
+	w := httptest.NewRecorder()
+
+	service.UpdateTaskStatus(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("waiting 200, get:  %d", w.Code)
+	}
+
+	var status bool
+	storage.Pool.QueryRow(context.Background(),
+		"SELECT is_complete FROM tasks WHERE id = $1", 1,
+	).Scan(&status)
+
+	if !status {
+		t.Fatal("Task not updated")
+	}
+
+}
