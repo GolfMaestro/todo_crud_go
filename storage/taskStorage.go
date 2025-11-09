@@ -19,6 +19,8 @@ func GetTasksByPersonIdFromDB(req_person_id int) []models.Task {
 
 	var tasks []models.Task
 
+	defer rows.Close()
+
 	for rows.Next() {
 		var t models.Task
 		temp_err := rows.Scan(&t.ID, &t.PersonID, &t.Title, &t.IsCompleted, &t.CreatedAt)
