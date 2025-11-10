@@ -23,7 +23,7 @@ func GetTasksByPersonIdFromDB(req_person_id int) []models.Task {
 
 	for rows.Next() {
 		var t models.Task
-		temp_err := rows.Scan(&t.ID, &t.PersonID, &t.Title, &t.IsCompleted, &t.CreatedAt)
+		temp_err := rows.Scan(&t.ID, &t.PersonID, &t.Title, &t.IsComplete, &t.CreatedAt)
 		if temp_err != nil {
 			fmt.Println("Something went wrong")
 		}
@@ -46,11 +46,11 @@ func InsertNewTaskInDB(newTask models.Task) models.Task {
 	}
 
 	temp_task := models.Task{
-		ID:          taskID,
-		PersonID:    newTask.ID,
-		Title:       newTask.Title,
-		IsCompleted: false,
-		CreatedAt:   time.Now(),
+		ID:         taskID,
+		PersonID:   newTask.ID,
+		Title:      newTask.Title,
+		IsComplete: false,
+		CreatedAt:  time.Now(),
 	}
 
 	return temp_task
