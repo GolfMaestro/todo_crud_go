@@ -19,3 +19,10 @@
 - POST /persons - add new person
 - DELETE /persons/{id} - delete person by id
 - PUT /persons/{id} - change person name
+
+
+## Tests
+
+- Run: go test ./... -v
+
+Tests cover 100% of function in service
